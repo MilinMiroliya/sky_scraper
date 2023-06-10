@@ -8,6 +8,7 @@ class WeatherProvider extends ChangeNotifier {
   bool isLoading = false;
   List<WeatherModel> weatherDataList = [];
   late String place;
+  List days = [];
 
   getWeatherData() async {
     isLoading = true;
@@ -17,13 +18,20 @@ class WeatherProvider extends ChangeNotifier {
     place = location;
 
     Uri url = Uri.parse("$baseUrl?location=$location");
-    var response = await http.get(url, headers: {
-      "X-RapidAPI-Key": "2f2d1e300dmshdfa09686a5e393fp199bd3jsn0e426b7cae94",
-      "X-RapidAPI-Host": "yahoo-weather5.p.rapidapi.com",
-    });
-    print("status code:  ${response.statusCode}");
+    var response = await http.get(
+      url,
+      headers: {
+        "X-RapidAPI-Key": "2f2d1e300dmshdfa09686a5e393fp199bd3jsn0e426b7cae94",
+        "X-RapidAPI-Host": "yahoo-weather5.p.rapidapi.com",
+      },
+    );
+    print("${WeatherModel.forecasts}");
     if (response.statusCode == 200) {
-      weatherDataList.add(weatherModelFromJson(response.body));
+      weatherDataList.add(
+        weatherModelFromJson(
+          response.body,
+        ),
+      );
       print(weatherDataList);
       isLoading = false;
     } else {

@@ -11,8 +11,6 @@ class WeatherPage extends StatefulWidget {
   State<WeatherPage> createState() => _WeatherPageState();
 }
 
-List dayList = [1, 2, 3, 4, 5];
-
 class _WeatherPageState extends State<WeatherPage> {
   @override
   Widget build(BuildContext context) {
@@ -122,7 +120,7 @@ class _WeatherPageState extends State<WeatherPage> {
                               physics: const BouncingScrollPhysics(),
                               scrollDirection: Axis.horizontal,
                               child: Row(
-                                children: dayList
+                                children: provider.weatherDataList
                                     .map(
                                       (e) => Container(
                                         margin: const EdgeInsets.all(10),
