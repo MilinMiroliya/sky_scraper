@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:sky_scraper/models/weather_model.dart';
 import 'package:sky_scraper/provider/weather_provider.dart';
 
 class WeatherPage extends StatefulWidget {
@@ -18,7 +19,7 @@ class _WeatherPageState extends State<WeatherPage> {
     return Consumer<WeatherProvider>(
       builder: (context, provider, child) => Scaffold(
         backgroundColor: Colors.white,
-        body: (provider.isLoading == true)
+        body: !provider.isLoading
             ? Padding(
                 padding: const EdgeInsets.only(top: 30),
                 child: Column(
@@ -75,8 +76,8 @@ class _WeatherPageState extends State<WeatherPage> {
                             ),
                           ),
                           Text(
-                            "32°",
-                            // "${provider.weatherDataList}",
+                            // "32°",
+                            "${provider.forCastList.first.date}",
                             style: GoogleFonts.openSans(
                               color: const Color(0xff2f2f85),
                               fontSize: 66,
@@ -120,7 +121,7 @@ class _WeatherPageState extends State<WeatherPage> {
                               physics: const BouncingScrollPhysics(),
                               scrollDirection: Axis.horizontal,
                               child: Row(
-                                children: provider.weatherDataList
+                                children: provider.forCastList
                                     .map(
                                       (e) => Container(
                                         margin: const EdgeInsets.all(10),
