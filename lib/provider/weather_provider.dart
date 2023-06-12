@@ -26,8 +26,8 @@ class WeatherProvider extends ChangeNotifier {
         "X-RapidAPI-Host": "yahoo-weather5.p.rapidapi.com",
       },
     );
-    print("forCastList[0] :: ${response.statusCode}");
-    if (response.statusCode == 200) {
+    print("Status code :: ${response.statusCode}");
+    if (response.statusCode == 200 || response.statusCode == 429) {
       weatherModel = WeatherModel.fromJson(json.decode(response.body));
       forCastList.addAll(weatherModel.forecasts!);
       print("forCastList[0] :: ${forCastList[0]}");
