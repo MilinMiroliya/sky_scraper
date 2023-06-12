@@ -6,7 +6,7 @@ import 'package:sky_scraper/models/weather_model.dart';
 
 class WeatherProvider extends ChangeNotifier {
   bool isLoading = false;
-  List<Forecast> forCastList = [];
+  List<Forecast> forecastList = [];
   late WeatherModel weatherModel;
   late String place;
   List days = [];
@@ -16,21 +16,18 @@ class WeatherProvider extends ChangeNotifier {
     String baseUrl = "https://yahoo-weather5.p.rapidapi.com/weather";
     String location = "Surat";
 
-    place = location;
-
     Uri url = Uri.parse("$baseUrl?location=$location");
     var response = await http.get(
       url,
       headers: {
-        "X-RapidAPI-Key": "2f2d1e300dmshdfa09686a5e393fp199bd3jsn0e426b7cae94",
+        "X-RapidAPI-Key": "584670a96amsh3aacfd1bdc09c36p124693jsn795fc8d11be7",
         "X-RapidAPI-Host": "yahoo-weather5.p.rapidapi.com",
       },
     );
     print("Status code :: ${response.statusCode}");
     if (response.statusCode == 200 || response.statusCode == 429) {
       weatherModel = WeatherModel.fromJson(json.decode(response.body));
-      forCastList.addAll(weatherModel.forecasts!);
-      print("forCastList[0] :: ${forCastList[0]}");
+      forecastList.addAll(weatherModel.forecasts!);
       isLoading = false;
     } else {
       Fluttertoast.showToast(
