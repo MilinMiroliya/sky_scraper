@@ -15,6 +15,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: const Color(0xff2f2f85),
       // appBar: AppBar(
       //   title: const Text("Sky Scrapper"),

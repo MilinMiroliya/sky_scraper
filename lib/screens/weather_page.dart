@@ -11,12 +11,15 @@ class WeatherPage extends StatefulWidget {
   State<WeatherPage> createState() => _WeatherPageState();
 }
 
+TextEditingController searchController = TextEditingController();
+
 class _WeatherPageState extends State<WeatherPage> {
   @override
   Widget build(BuildContext context) {
     Provider.of<WeatherProvider>(context).getWeatherData();
     return Consumer<WeatherProvider>(
       builder: (context, provider, child) => Scaffold(
+        resizeToAvoidBottomInset: false,
         backgroundColor: Colors.white,
         body: !provider.isLoading
             ? const Center(
@@ -27,27 +30,54 @@ class _WeatherPageState extends State<WeatherPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        IconButton(
-                          onPressed: () {},
-                          icon: const Icon(CupertinoIcons.bars),
-                        ),
-                        Text(
-                          provider.forecastList.first.day!,
-                          style: GoogleFonts.openSans(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20,
-                            color: const Color(0xff2f2f85),
+                    (provider.isSearch)
+                        ? Row(
+                            children: [
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 20, right: 20),
+                                child: TextField(
+                                  controller: searchController,
+                                  onSubmitted: (val) {
+                                    provider.city = val;
+                                  },
+                                  decoration: const InputDecoration(
+                                    border: InputBorder.none,
+                                    hintText: "Search Your Location..",
+                                  ),
+                                ),
+                              ),
+                              IconButton(
+                                icon: Icon(CupertinoIcons.search),
+                                onPressed: () {
+                                  provider.city = searchController.text;
+                                },
+                              )
+                            ],
+                          )
+                        : Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              IconButton(
+                                onPressed: () {},
+                                icon: const Icon(CupertinoIcons.bars),
+                              ),
+                              Text(
+                                provider.forecastList.first.day!,
+                                style: GoogleFonts.openSans(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20,
+                                  color: const Color(0xff2f2f85),
+                                ),
+                              ),
+                              IconButton(
+                                onPressed: () {
+                                  provider.moveToSearch();
+                                },
+                                icon: const Icon(CupertinoIcons.add),
+                              ),
+                            ],
                           ),
-                        ),
-                        IconButton(
-                          onPressed: () {},
-                          icon: const Icon(CupertinoIcons.add),
-                        ),
-                      ],
-                    ),
                     const SizedBox(
                       height: 50,
                     ),
@@ -61,9 +91,9 @@ class _WeatherPageState extends State<WeatherPage> {
                         ),
                       ],
                     ),
-                    // const SizedBox(
-                    //   height: 80,
-                    // ),
+                    const SizedBox(
+                      height: 60,
+                    ),
                     Padding(
                       padding: const EdgeInsets.only(left: 40),
                       child: Column(
@@ -156,6 +186,11 @@ class _WeatherPageState extends State<WeatherPage> {
                                                   fontSize: 20,
                                                   fontWeight: FontWeight.bold,
                                                 ),
+                                              ),
+                                              Image.asset(
+                                                width: 40,
+                                                height: 40,
+                                                "assets/images/1.png",
                                               ),
                                             ],
                                           ),

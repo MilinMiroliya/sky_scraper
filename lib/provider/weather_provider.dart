@@ -10,22 +10,29 @@ class WeatherProvider extends ChangeNotifier {
   late WeatherModel weatherModel;
   late String place;
   List days = [];
+  bool isSearch = false;
+  String city = "surat";
+
+  moveToSearch() {
+    isSearch = !isSearch;
+    notifyListeners();
+  }
 
   getWeatherData() async {
     isLoading = true;
     String baseUrl = "https://yahoo-weather5.p.rapidapi.com/weather";
-    String location = "Surat";
+    String location = city;
 
     Uri url = Uri.parse("$baseUrl?location=$location");
     var response = await http.get(
       url,
       headers: {
-        "X-RapidAPI-Key": "584670a96amsh3aacfd1bdc09c36p124693jsn795fc8d11be7",
+        "X-RapidAPI-Key": "1c858f3f0emsh67309c502352ea7p1e698djsn6bf9e9c98150",
         "X-RapidAPI-Host": "yahoo-weather5.p.rapidapi.com",
       },
     );
     print("Status code :: ${response.statusCode}");
-    if (response.statusCode == 200 || response.statusCode == 429) {
+    if (response.statusCode == 200) {
       weatherModel = WeatherModel.fromJson(json.decode(response.body));
       forecastList.addAll(weatherModel.forecasts!);
       isLoading = false;
@@ -37,6 +44,5 @@ class WeatherProvider extends ChangeNotifier {
       );
       isLoading = false;
     }
-    notifyListeners();
   }
 }
