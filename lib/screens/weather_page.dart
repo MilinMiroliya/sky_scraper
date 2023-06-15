@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:sky_scraper/provider/weather_provider.dart';
 
@@ -11,8 +12,6 @@ class WeatherPage extends StatefulWidget {
   State<WeatherPage> createState() => _WeatherPageState();
 }
 
-TextEditingController searchController = TextEditingController();
-
 class _WeatherPageState extends State<WeatherPage> {
   @override
   Widget build(BuildContext context) {
@@ -21,7 +20,7 @@ class _WeatherPageState extends State<WeatherPage> {
       builder: (context, provider, child) => Scaffold(
         resizeToAvoidBottomInset: false,
         backgroundColor: Colors.white,
-        body: (!provider.isLoading || provider.forecastList.isEmpty)
+        body: (!provider.isLoading)
             ? const Center(
                 child: CircularProgressIndicator(),
               )
@@ -45,8 +44,7 @@ class _WeatherPageState extends State<WeatherPage> {
                                 ),
                               ),
                               Container(
-                                margin:
-                                    const EdgeInsets.only(left: 20, right: 20),
+                                padding: const EdgeInsets.only(left: 40),
                                 child: TextField(
                                   controller: searchController,
                                   onSubmitted: (val) {
@@ -77,7 +75,7 @@ class _WeatherPageState extends State<WeatherPage> {
                               ),
                               IconButton(
                                 onPressed: () {
-                                  provider.toSearch();
+                                  provider.isSearch = !provider.isSearch;
                                 },
                                 icon: const Icon(CupertinoIcons.add),
                               ),
@@ -126,14 +124,14 @@ class _WeatherPageState extends State<WeatherPage> {
                             ],
                           ),
                         ),
-                        Spacer(),
+                        const Spacer(),
                         Padding(
                           padding: const EdgeInsets.only(right: 40),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                "Mostly Sunny",
+                                "Sunrise : ${provider.currentObservationList.first.astronomy!.sunrise}",
                                 style: GoogleFonts.openSans(
                                   fontSize: 16,
                                   color: const Color(0xff8a8ab3),
@@ -142,7 +140,7 @@ class _WeatherPageState extends State<WeatherPage> {
                               ),
                               Text(
                                 // "32°",
-                                "${provider.forecastList.first.code}°",
+                                "Sunset : ${provider.currentObservationList.first.astronomy!.sunset}",
                                 style: GoogleFonts.openSans(
                                   color: const Color(0xff2f2f85),
                                   fontSize: 16,
@@ -246,3 +244,5 @@ class _WeatherPageState extends State<WeatherPage> {
     );
   }
 }
+
+TextEditingController searchController = TextEditingController();

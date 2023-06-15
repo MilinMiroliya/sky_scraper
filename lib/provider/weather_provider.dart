@@ -7,6 +7,8 @@ import 'package:sky_scraper/models/weather_model.dart';
 class WeatherProvider extends ChangeNotifier {
   bool isLoading = false;
   List<Forecast> forecastList = [];
+  List<Location> locationList = [];
+  List<CurrentObservation> currentObservationList = [];
   late WeatherModel weatherModel;
   late String place;
   List days = [];
@@ -20,9 +22,9 @@ class WeatherProvider extends ChangeNotifier {
 
   changeLocation(String nameOfCity) {
     city = nameOfCity;
-    print(city);
+    print("${city[0].toUpperCase()} ");
     getWeatherData();
-    toSearch();
+    isSearch = !isSearch;
     notifyListeners();
   }
 
@@ -35,7 +37,7 @@ class WeatherProvider extends ChangeNotifier {
     var response = await http.get(
       url,
       headers: {
-        "X-RapidAPI-Key": "584670a96amsh3aacfd1bdc09c36p124693jsn795fc8d11be7",
+        "X-RapidAPI-Key": "ed0f1adeb9msh3b48f5d06eaca4ap1ef4edjsn82167cbc18b7",
         "X-RapidAPI-Host": "yahoo-weather5.p.rapidapi.com",
       },
     );
@@ -45,6 +47,7 @@ class WeatherProvider extends ChangeNotifier {
       forecastList.clear();
       weatherModel = WeatherModel.fromJson(json.decode(response.body));
       forecastList.addAll(weatherModel.forecasts!);
+      currentObservationList.add(weatherModel.currentObservation!);
       isLoading = false;
       notifyListeners();
       print(url);
