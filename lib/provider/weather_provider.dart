@@ -13,8 +13,16 @@ class WeatherProvider extends ChangeNotifier {
   bool isSearch = false;
   String city = "surat";
 
-  moveToSearch() {
+  toSearch() {
     isSearch = !isSearch;
+    notifyListeners();
+  }
+
+  changeLocation(String nameOfCity) {
+    city = nameOfCity;
+    print(city);
+    getWeatherData();
+    toSearch();
     notifyListeners();
   }
 
@@ -27,15 +35,19 @@ class WeatherProvider extends ChangeNotifier {
     var response = await http.get(
       url,
       headers: {
-        "X-RapidAPI-Key": "1c858f3f0emsh67309c502352ea7p1e698djsn6bf9e9c98150",
+        "X-RapidAPI-Key": "584670a96amsh3aacfd1bdc09c36p124693jsn795fc8d11be7",
         "X-RapidAPI-Host": "yahoo-weather5.p.rapidapi.com",
       },
     );
     print("Status code :: ${response.statusCode}");
+    print("Status code :: ${response.body}");
     if (response.statusCode == 200) {
+      forecastList.clear();
       weatherModel = WeatherModel.fromJson(json.decode(response.body));
       forecastList.addAll(weatherModel.forecasts!);
       isLoading = false;
+      notifyListeners();
+      print(url);
     } else {
       Fluttertoast.showToast(
         msg: 'Something Went Wrong..',
@@ -44,5 +56,6 @@ class WeatherProvider extends ChangeNotifier {
       );
       isLoading = false;
     }
+    isLoading = false;
   }
 }

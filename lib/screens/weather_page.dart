@@ -21,7 +21,7 @@ class _WeatherPageState extends State<WeatherPage> {
       builder: (context, provider, child) => Scaffold(
         resizeToAvoidBottomInset: false,
         backgroundColor: Colors.white,
-        body: !provider.isLoading
+        body: (!provider.isLoading || provider.forecastList.isEmpty)
             ? const Center(
                 child: CircularProgressIndicator(),
               )
@@ -31,27 +31,32 @@ class _WeatherPageState extends State<WeatherPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     (provider.isSearch)
-                        ? Row(
+                        ? Stack(
+                            alignment: Alignment.center,
                             children: [
-                              Padding(
-                                padding:
+                              Container(
+                                margin:
+                                    const EdgeInsets.only(left: 20, right: 20),
+                                height: 50,
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                  color: Colors.amber,
+                                  borderRadius: BorderRadius.circular(30),
+                                ),
+                              ),
+                              Container(
+                                margin:
                                     const EdgeInsets.only(left: 20, right: 20),
                                 child: TextField(
                                   controller: searchController,
                                   onSubmitted: (val) {
-                                    provider.city = val;
+                                    provider.changeLocation(val);
                                   },
                                   decoration: const InputDecoration(
                                     border: InputBorder.none,
                                     hintText: "Search Your Location..",
                                   ),
                                 ),
-                              ),
-                              IconButton(
-                                icon: Icon(CupertinoIcons.search),
-                                onPressed: () {
-                                  provider.city = searchController.text;
-                                },
                               )
                             ],
                           )
@@ -63,7 +68,7 @@ class _WeatherPageState extends State<WeatherPage> {
                                 icon: const Icon(CupertinoIcons.bars),
                               ),
                               Text(
-                                provider.forecastList.first.day!,
+                                provider.city,
                                 style: GoogleFonts.openSans(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 20,
@@ -72,7 +77,7 @@ class _WeatherPageState extends State<WeatherPage> {
                               ),
                               IconButton(
                                 onPressed: () {
-                                  provider.moveToSearch();
+                                  provider.toSearch();
                                 },
                                 icon: const Icon(CupertinoIcons.add),
                               ),
@@ -94,30 +99,60 @@ class _WeatherPageState extends State<WeatherPage> {
                     const SizedBox(
                       height: 60,
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 40),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Mostly Sunny",
-                            style: GoogleFonts.openSans(
-                              fontSize: 26,
-                              color: const Color(0xff8a8ab3),
-                              fontWeight: FontWeight.w600,
-                            ),
+                    Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: 40),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Mostly Sunny",
+                                style: GoogleFonts.openSans(
+                                  fontSize: 26,
+                                  color: const Color(0xff8a8ab3),
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              Text(
+                                // "32°",
+                                "${provider.forecastList.first.code}°",
+                                style: GoogleFonts.openSans(
+                                  color: const Color(0xff2f2f85),
+                                  fontSize: 66,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ],
                           ),
-                          Text(
-                            // "32°",
-                            "${provider.forecastList.firstOrNull!.code!}°",
-                            style: GoogleFonts.openSans(
-                              color: const Color(0xff2f2f85),
-                              fontSize: 66,
-                              fontWeight: FontWeight.w700,
-                            ),
+                        ),
+                        Spacer(),
+                        Padding(
+                          padding: const EdgeInsets.only(right: 40),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Mostly Sunny",
+                                style: GoogleFonts.openSans(
+                                  fontSize: 16,
+                                  color: const Color(0xff8a8ab3),
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              Text(
+                                // "32°",
+                                "${provider.forecastList.first.code}°",
+                                style: GoogleFonts.openSans(
+                                  color: const Color(0xff2f2f85),
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                     const Spacer(),
                     Container(
@@ -147,7 +182,7 @@ class _WeatherPageState extends State<WeatherPage> {
                               ),
                             ),
                             const SizedBox(
-                              height: 20,
+                              height: 40,
                             ),
                             SingleChildScrollView(
                               physics: const BouncingScrollPhysics(),
